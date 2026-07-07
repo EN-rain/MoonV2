@@ -1,0 +1,173 @@
+/* Support.module.css */
+.support {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--black);
+  padding: 100px 80px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+.support::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--black-border), transparent);
+}
+
+.sideTag {
+  position: absolute;
+  left: 20px; top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  display: flex; align-items: center; gap: 10px;
+}
+.tagNum   { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; color: var(--red); }
+.tagLabel { font-size: 9px;  font-weight: 600; letter-spacing: 0.3em; color: var(--white-muted); }
+
+.inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 80px;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Left */
+.italic {
+  font-style: italic;
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--red);
+  margin-top: 24px;
+  font-family: Georgia, serif;
+}
+.desc {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--white-muted);
+  max-width: 380px;
+  line-height: 1.8;
+  margin-top: 12px;
+}
+
+.progressBlock { margin-top: 36px; }
+.progressLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--white-muted);
+  margin-bottom: 8px;
+}
+.progressTrack {
+  height: 2px;
+  background: var(--black-border);
+  position: relative;
+  overflow: visible;
+}
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--red-dark), var(--red));
+  width: 0%;
+  position: relative;
+  transition: width 1.4s var(--ease-out);
+  box-shadow: 0 0 12px var(--red-glow);
+}
+.progressFill::after {
+  content: '';
+  position: absolute;
+  right: -4px; top: -3px;
+  width: 8px; height: 8px;
+  background: var(--red);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--red-glow);
+}
+
+/* Center orb */
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.orb {
+  position: relative;
+  width: 280px;
+}
+.orbImg {
+  width: 100%;
+  filter: drop-shadow(0 0 40px var(--red-glow));
+  animation: orbFloat 4s ease-in-out infinite;
+}
+@keyframes orbFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-16px); }
+}
+.orbGlow {
+  position: absolute;
+  inset: 15%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(170,59,255,0.25), transparent 70%);
+  filter: blur(30px);
+  animation: pulse 3s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.2); }
+}
+
+/* Right connect panel */
+.connectPanel { display: flex; flex-direction: column; gap: 4px; }
+.connectTitle {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: var(--white-muted);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+.connectLinks { display: flex; flex-direction: column; gap: 2px; }
+.connectLink {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--white-muted);
+  cursor: pointer;
+  transition: background 0.25s, border-color 0.25s, color 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.connectLink:hover {
+  background: rgba(170,59,255,0.06);
+  border-color: var(--red);
+  color: var(--white);
+}
+.connectIcon {
+  width: 16px; height: 16px;
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+.connectLink:hover .connectIcon { color: var(--red); }
+
+@media (max-width: 1100px) {
+  .inner { grid-template-columns: 1fr 1fr; }
+  .center { display: none; }
+}
+@media (max-width: 768px) {
+  .support { padding: 80px 24px; }
+  .inner { grid-template-columns: 1fr; gap: 48px; }
+  .center { display: flex; }
+  .orb { width: 200px; }
+  .sideTag { display: none; }
+}

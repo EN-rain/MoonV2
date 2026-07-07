@@ -1,0 +1,211 @@
+/* Games.module.css — Active Selector Layout */
+.games {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--black);
+  display: grid;
+  /* left: section label, right: selector list */
+  grid-template-columns: 1fr auto;
+  overflow: hidden;
+}
+
+/* ── Full-bleed background stack ── */
+.bgStack {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.bgSlide {
+  position: absolute;
+  inset: 0;
+  will-change: opacity, clip-path, transform;
+}
+.bgImg {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(25%) contrast(1.1);
+}
+.bgPlaceholder {
+  width: 100%; height: 100%;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  font-weight: 900;
+  color: rgba(245,245,245,0.06);
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+.bgVignette {
+  position: absolute;
+  inset: 0;
+  /* Strong gradient from right (selector side) and from bottom */
+  background:
+    linear-gradient(to right,  rgba(8,8,8,0.3) 0%, rgba(8,8,8,0.98) 55%),
+    linear-gradient(to top,    rgba(8,8,8,0.8) 0%, transparent 50%),
+    linear-gradient(to bottom, rgba(8,8,8,0.7) 0%, transparent 30%);
+  pointer-events: none;
+}
+
+/* ── Left column: label + title + active info ── */
+.labelCol {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 60px 60px 60px;
+  gap: 20px;
+  pointer-events: none;
+}
+.sideTag {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tagNum   { font-size: 9px; font-weight: 700; letter-spacing: 0.2em; color: var(--red); }
+.tagBar   { width: 20px; height: 1px; background: var(--red); flex-shrink: 0; }
+.tagLabel { font-size: 8px; font-weight: 600; letter-spacing: 0.3em; color: var(--white-muted); }
+
+.bigTitle {
+  /* Override shared section-title for this layout */
+  max-width: 480px;
+  line-height: 0.95 !important;
+}
+
+.activeInfo {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.activeGenre {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--white-muted);
+  text-transform: uppercase;
+}
+.activeYear {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--white-muted);
+}
+.activeStatus {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  color: var(--black);
+  background: var(--red);
+  padding: 3px 10px;
+  text-transform: uppercase;
+}
+.activeStatus[data-status="COMING SOON"] {
+  background: transparent;
+  color: var(--white-muted);
+  border: 1px solid rgba(245,245,245,0.2);
+}
+
+/* ── Right column: numbered selector ── */
+.selector {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  width: 320px;
+  border-left: 1px solid rgba(255,255,255,0.06);
+  background: rgba(8,8,8,0.6);
+  backdrop-filter: blur(12px);
+  padding: 90px 0 40px;
+}
+
+.selectorItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 32px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.25s;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  position: relative;
+  overflow: hidden;
+}
+.selectorItem:last-child { border-bottom: none; }
+.selectorItem::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--red);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.3s var(--ease-out);
+}
+.selectorItem:hover,
+.selectorActive {
+  background: rgba(170,59,255,0.06);
+}
+.selectorItem:hover::before,
+.selectorActive::before {
+  transform: scaleY(1);
+}
+.selectorNum {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--red);
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+.selectorDash {
+  width: 16px;
+  height: 1px;
+  background: rgba(245,245,245,0.15);
+  flex-shrink: 0;
+  transition: background 0.2s, width 0.3s;
+}
+.selectorItem:hover .selectorDash,
+.selectorActive .selectorDash {
+  background: var(--red);
+  width: 24px;
+}
+.selectorTitle {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--white);
+  text-transform: uppercase;
+  flex: 1;
+  transition: color 0.2s;
+}
+.selectorItem:hover .selectorTitle { color: var(--white); }
+.selectorActive .selectorTitle { color: var(--white); }
+.selectorArrow {
+  font-size: 12px;
+  color: var(--red);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+.selectorItem:hover .selectorArrow,
+.selectorActive .selectorArrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (max-width: 900px) {
+  .games { grid-template-columns: 1fr; }
+  .selector { width: 100%; border-left: none; border-top: 1px solid rgba(255,255,255,0.06); flex-direction: row; overflow-x: auto; padding: 0; }
+  .selectorItem { flex-direction: column; gap: 6px; padding: 16px 20px; border-bottom: none; border-right: 1px solid rgba(255,255,255,0.04); min-width: 120px; }
+  .bgVignette { background: linear-gradient(to top, rgba(8,8,8,0.95) 0%, transparent 60%); }
+}

@@ -1,0 +1,160 @@
+/* ═══════════════════════════════════════════════════════════
+   MOONV2 STUDIO — Global Design System
+   ═══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+/* ─── Tokens ─── */
+:root {
+  --black:        #080808;
+  --black-soft:   #0d0d0d;
+  --black-card:   #111111;
+  --black-border: #1a1a1a;
+  --red:          #aa3bff;
+  --red-dark:     #5b19d6;
+  --red-glow:     rgba(170, 59, 255, 0.35);
+  --red-glow-sm:  rgba(170, 59, 255, 0.15);
+  --white:        #f5f5f5;
+  --white-dim:    rgba(245,245,245,0.65);
+  --white-muted:  rgba(245,245,245,0.35);
+  --white-faint:  rgba(245,245,245,0.08);
+  --font-main:    'Outfit', sans-serif;
+  --font-alt:     'Space Grotesk', sans-serif;
+  --ease-out:     cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out:  cubic-bezier(0.87, 0, 0.13, 1);
+  --nav-h:        72px;
+}
+
+/* ─── Reset ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: auto; /* Lenis handles this */
+  font-size: 16px;
+}
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-main);
+  overflow-x: hidden;
+  cursor: pointer;
+}
+
+img { display: block; max-width: 100%; }
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+button { font-family: inherit; cursor: pointer; }
+
+/* ─── Custom Cursor ─── */
+.cursor {
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+}
+.cursor__dot {
+  width: 8px; height: 8px;
+  background: var(--white);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s, background 0.2s;
+}
+.cursor__ring {
+  width: 36px; height: 36px;
+  border: 1.5px solid rgba(255,255,255,0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.35s var(--ease-out),
+              height 0.35s var(--ease-out),
+              border-color 0.2s;
+}
+.cursor--hover .cursor__dot  { width: 14px; height: 14px; background: var(--red); }
+.cursor--hover .cursor__ring { width: 52px; height: 52px; border-color: var(--red); }
+
+/* ─── Section tag (01 HERO etc) ─── */
+.section-tag {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.section-tag .num {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--red);
+}
+.section-tag .label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  color: var(--white-muted);
+  border-left: 1px solid var(--black-border);
+  padding-left: 10px;
+}
+
+/* ─── Section title ─── */
+.section-title {
+  font-family: var(--font-main);
+  font-size: clamp(2.4rem, 5vw, 5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+/* Each .line acts as a mask container for the rolling reveal */
+.section-title .line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.05em; /* prevent descender clipping */
+}
+.section-title .white { color: var(--white); }
+.section-title .red   { color: var(--red); }
+
+/* ─── Buttons ─── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: var(--red);
+  color: var(--white);
+  font-family: var(--font-main);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.25s;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+}
+.btn-primary:hover { background: #c77dff; transform: translateY(-2px); }
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: transparent;
+  color: var(--white);
+  font-family: var(--font-main);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: border-color 0.25s, color 0.25s;
+}
+.btn-outline:hover { border-color: var(--red); color: var(--red); }
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--red-dark); border-radius: 2px; }
+
+/* ─── Selection ─── */
+::selection { background: var(--red); color: var(--white); }
