@@ -1,46 +1,59 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import anime from 'animejs';
 import styles from './Preloader.module.css';
 
 export default function Preloader({ assets = [], onComplete }) {
   const containerRef = useRef(null);
-  const counterRef = useRef(null);
-  const barRef = useRef(null);
-  const [progress, setProgress] = useState(0);
+  const numRef       = useRef(null);
+  const barRef       = useRef(null);
+  const fillRef      = useRef(null);
 
   useEffect(() => {
-    let cancelled = false;
-    let tween;
-    // Disable scroll while loading
     document.body.style.overflow = 'hidden';
+    let cancelled = false;
+    let currentNum = 0;
 
-    const setLoadedProgress = (value) => {
+    // Write directly to DOM — zero React re-renders
+    const setDisplay = (value) => {
       if (cancelled) return;
-      const current = Math.round(value);
-      setProgress(current);
-      if (barRef.current) barRef.current.style.width = `${current}%`;
+      const v = Math.min(100, Math.round(value));
+      if (numRef.current)  numRef.current.textContent  = v;
+      if (fillRef.current) fillRef.current.style.transform = `scaleX(${v / 100})`;
     };
 
     const exit = () => {
       if (cancelled) return;
-      gsap.timeline({
+      // Make sure counter shows 100 before leaving
+      setDisplay(100);
+
+      const tl = gsap.timeline({
         onComplete: () => {
-          document.body.style.overflow = '';
-          onComplete();
+          if (!cancelled) {
+            document.body.style.overflow = '';
+            onComplete();
+          }
         }
-      })
-      .to(counterRef.current, {
-        scale: 1.5,
-        opacity: 0,
-        duration: 0.6,
-        ease: "power3.in"
-      })
-      .to(containerRef.current, {
-        yPercent: -100,
-        duration: 0.8,
-        ease: "power4.inOut"
-      }, "-=0.2");
+      });
+
+      // Slam bar to full, then slide everything out upward
+      tl
+        .to(fillRef.current, {
+          scaleX: 1,
+          duration: 0.25,
+          ease: 'power2.out'
+        })
+        .to([numRef.current?.parentElement, barRef.current], {
+          opacity: 0,
+          y: -12,
+          duration: 0.35,
+          ease: 'power2.in',
+          stagger: 0.06,
+        }, '+=0.12')
+        .to(containerRef.current, {
+          yPercent: -100,
+          duration: 0.7,
+          ease: 'expo.inOut',
+        }, '-=0.1');
     };
 
     const loadAsset = (src) => new Promise((resolve) => {
@@ -50,33 +63,57 @@ export default function Preloader({ assets = [], onComplete }) {
       img.src = src;
     });
 
-    let loaded = 0;
-    const minDelay = new Promise((resolve) => setTimeout(resolve, 700));
-    const preload = Promise.all(
-      assets.map((src) => loadAsset(src).then(() => {
-        loaded += 1;
-        setLoadedProgress((loaded / assets.length) * 100);
-      }))
-    );
-
-    tween = anime({
-      targets: { val: 0 },
-      val: assets.length ? 85 : 100,
-      duration: 700,
-      easing: 'easeOutExpo',
-      update: (anim) => {
-        if (!assets.length) setLoadedProgress(anim.animatables[0].target.val);
-      }
+    // Animate count smoothly with gsap — no React state involved
+    const countProxy = { val: 0 };
+    const countTween = gsap.to(countProxy, {
+      val: 85,
+      duration: 0.9,
+      ease: 'power2.out',
+      onUpdate: () => setDisplay(countProxy.val),
     });
+
+    let loaded = 0;
+    const minDelay = new Promise((r) => setTimeout(r, 700));
+    const preload  = assets.length
+      ? Promise.all(assets.map((src) =>
+          loadAsset(src).then(() => {
+            loaded++;
+            const natural = (loaded / assets.length) * 100;
+            // Only advance if natural > current animated value
+            if (natural > countProxy.val) {
+              gsap.to(countProxy, {
+                val: natural,
+                duration: 0.4,
+                ease: 'power2.out',
+                overwrite: true,
+                onUpdate: () => setDisplay(countProxy.val),
+              });
+            }
+          })
+        ))
+      : Promise.resolve();
 
     Promise.all([preload, minDelay]).then(() => {
-      setLoadedProgress(100);
-      exit();
+      countTween.kill();
+      // Smoothly finish to 100
+      gsap.to(countProxy, {
+        val: 100,
+        duration: 0.3,
+        ease: 'power2.out',
+        onUpdate: () => setDisplay(countProxy.val),
+        onComplete: exit,
+      });
     });
+
+    // Entrance: fade in
+    gsap.fromTo(containerRef.current,
+      { opacity: 0 },
+      { opacity: 1, duration: 0.3, ease: 'power2.out' }
+    );
 
     return () => {
       cancelled = true;
-      tween?.pause();
+      countTween.kill();
       document.body.style.overflow = '';
     };
   }, [assets, onComplete]);
@@ -84,12 +121,16 @@ export default function Preloader({ assets = [], onComplete }) {
   return (
     <div ref={containerRef} className={styles.preloader}>
       <div className={styles.noise} />
-      <div ref={counterRef} className={styles.counter}>
-        {progress}%
+
+      <div className={styles.counterWrap}>
+        <span ref={numRef} className={styles.counter}>0</span>
+        <span className={styles.pct}>%</span>
       </div>
+
       <div className={styles.loadingText}>INITIALIZING SYSTEMS</div>
-      <div className={styles.progressWrap}>
-        <div ref={barRef} className={styles.progressBar} />
+
+      <div ref={barRef} className={styles.progressWrap}>
+        <div ref={fillRef} className={styles.progressBar} />
       </div>
     </div>
   );
