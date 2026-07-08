@@ -32,37 +32,49 @@ export default function About({ isActive }) {
     }
 
     setHidden();
+    let introTl;
+    let introCall;
+
     const ctx = gsap.context(() => {
       const imgEl = imgRef.current.querySelector('img');
-      const tl = gsap.timeline({ delay: 0.1 });
+      const playIntro = () => {
+        introTl?.kill();
+        introTl = gsap.timeline();
 
-      // Left text stagger reveal with blur
-      tl.to(leftRef.current.children, {
-        opacity: 1, y: 0, filter: 'blur(0px)',
-        duration: 0.8, ease: 'power3.out',
-        stagger: 0.1
-      }, 0)
-      
-      // Image cinematic mask reveal & scale down
-      .to(imgRef.current, {
-        clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
-        duration: 1.2, ease: 'power4.inOut',
-      }, 0.1)
-      .to(imgEl, {
-        scale: 1,
-        duration: 1.4, ease: 'power3.out',
-      }, 0.1)
+        // Left text stagger reveal with blur
+        introTl.to(leftRef.current.children, {
+          opacity: 1, y: 0, filter: 'blur(0px)',
+          duration: 0.8, ease: 'power3.out',
+          stagger: 0.1
+        }, 0)
+        
+        // Image cinematic mask reveal & scale down
+        .to(imgRef.current, {
+          clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
+          duration: 1.2, ease: 'power4.inOut',
+        }, 0.1)
+        .to(imgEl, {
+          scale: 1,
+          duration: 1.4, ease: 'power3.out',
+        }, 0.1)
 
-      // Process cards stagger blur reveal
-      .to(cardsRef.current, {
-        opacity: 1, x: 0, filter: 'blur(0px)',
-        duration: 0.8, ease: 'power3.out',
-        stagger: 0.1
-      }, 0.3);
+        // Process cards stagger blur reveal
+        .to(cardsRef.current, {
+          opacity: 1, x: 0, filter: 'blur(0px)',
+          duration: 0.8, ease: 'power3.out',
+          stagger: 0.1
+        }, 0.3);
+      };
+
+      introCall = gsap.delayedCall(window.navJumpDelay ? 0.06 : 0.1, playIntro);
 
     }, sectionRef);
 
-    return () => ctx.revert();
+    return () => {
+      introCall?.kill();
+      introTl?.kill();
+      ctx.revert();
+    };
   }, [isActive]);
 
   return (
@@ -74,7 +86,7 @@ export default function About({ isActive }) {
 
       <div className={styles.inner}>
         {/* Left */}
-        <div ref={leftRef} className={styles.left}>
+        <div ref={leftRef} className={styles.left} data-about-content>
           <h2 className="section-title">
             <span className="line white">BUILT BY</span>
             <span className="line white">ONE MIND.</span>
@@ -90,7 +102,7 @@ export default function About({ isActive }) {
         </div>
 
         {/* Center image */}
-        <div ref={imgRef} className={styles.imgWrap}>
+        <div ref={imgRef} className={styles.imgWrap} data-about-content>
           <img
             src="/images/about_character.png"
             alt="Developer character art"
@@ -103,7 +115,7 @@ export default function About({ isActive }) {
         </div>
 
         {/* Right process cards */}
-        <div className={styles.right}>
+        <div className={styles.right} data-about-content>
           {process.map(({ num, title, sub }, i) => (
             <div
               key={num}

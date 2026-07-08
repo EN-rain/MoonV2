@@ -16,12 +16,24 @@ const links = [
 
 const CHAPTER_SCROLL = window.innerHeight * 1.5;
 
+const BladeLinks = () => (
+  <div className={styles.bladeInner}>
+    {links.map((link) => (
+      <div key={link.id} className={styles.bladeLinkWrap}>
+        <span className={styles.bladeLinkNum}>0{link.id + 1}</span>
+        <span className={styles.bladeBigLink}>{link.label}</span>
+      </div>
+    ))}
+  </div>
+);
+
 // Content rendered inside each blade — static, always fully visible
 // We pass refs so we can synchronously force hover styles without React render delays
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const overlayRef  = useRef(null);
   const overlayBgRef = useRef(null);
+  const overlayInnerRef = useRef(null);
   const linksRef    = useRef([]);
   const numsRef     = useRef([]);
   const btnRef      = useRef(null);
@@ -72,6 +84,7 @@ export default function Navbar() {
       gsap.set(logoV2Ref.current, { color: '#aa3bff' });
       gsap.set(overlayRef.current, { autoAlpha: 1 });
       gsap.set(overlayBgRef.current, { autoAlpha: 1 });
+      gsap.set(overlayInnerRef.current, { autoAlpha: 1 });
       
       // Park blades off-screen
       gsap.set(slashRef.current, { autoAlpha: 0, visibility: 'hidden' });
@@ -124,7 +137,7 @@ export default function Navbar() {
     isClosing.current = true;
 
     const { cx, cy } = getBtnOrigin();
-    gsap.killTweensOf([slashRef.current, topBladeRef.current, botBladeRef.current, overlayRef.current, overlayBgRef.current, logoV2Ref.current]);
+    gsap.killTweensOf([slashRef.current, topBladeRef.current, botBladeRef.current, overlayRef.current, overlayBgRef.current, overlayInnerRef.current, logoV2Ref.current]);
 
     const tl = gsap.timeline({
       defaults: { ease: 'power3.inOut' },
@@ -134,7 +147,9 @@ export default function Navbar() {
         gsap.set(topBladeRef.current, { yPercent: 0 });
         gsap.set(botBladeRef.current, { yPercent: 0 });
         gsap.set(overlayBgRef.current, { autoAlpha: 1 });
+        gsap.set(overlayInnerRef.current, { autoAlpha: 1 });
         gsap.set(overlayRef.current, { autoAlpha: 1, clipPath: `circle(0% at ${cx} ${cy})` });
+        window.dispatchEvent(new CustomEvent('moonv2:nav-transition-complete', { detail: { index } }));
         setMenuOpen(false);
         callback?.();
       },
@@ -144,6 +159,7 @@ export default function Navbar() {
       .set(slashRef.current, { autoAlpha: 1, visibility: 'visible' })
       .set(topBladeRef.current, { yPercent: 0 })
       .set(botBladeRef.current, { yPercent: 0 })
+      .set(overlayInnerRef.current, { autoAlpha: 0 }, 0)
       .to(overlayBgRef.current, { autoAlpha: 0, duration: 0.08, ease: 'none' }, 0.02)
       .call(() => {
         if (index !== undefined && index !== null) {
@@ -189,7 +205,7 @@ export default function Navbar() {
       {/* Main interactive overlay */}
       <div ref={overlayRef} className={styles.overlay}>
         <div ref={overlayBgRef} className={styles.overlayBg} />
-        <div className={styles.overlayInner}>
+        <div ref={overlayInnerRef} className={styles.overlayInner}>
           {links.map((link, i) => (
             <div key={link.id} className={styles.linkWrap}>
               <span ref={el => numsRef.current[i] = el} className={styles.linkNum}>
@@ -208,8 +224,12 @@ export default function Navbar() {
       </div>
 
       <div ref={slashRef} className={styles.slashTransition} aria-hidden="true">
-        <div ref={topBladeRef} className={styles.topBlade} />
-        <div ref={botBladeRef} className={styles.botBlade} />
+        <div ref={topBladeRef} className={styles.topBlade}>
+          <BladeLinks />
+        </div>
+        <div ref={botBladeRef} className={styles.botBlade}>
+          <BladeLinks />
+        </div>
       </div>
     </>
   );

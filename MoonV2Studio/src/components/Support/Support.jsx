@@ -95,7 +95,7 @@ export default function Support({ isActive }) {
 
     setHidden();
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.1 });
+      const tl = gsap.timeline({ delay: window.navJumpDelay ? 0.06 : 0.1 });
 
       tl.to(titleLines, {
         y: '0%', skewY: 0,

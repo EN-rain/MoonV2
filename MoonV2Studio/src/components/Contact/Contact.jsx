@@ -33,7 +33,7 @@ export default function Contact({ isActive }) {
 
     setHidden();
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.1 });
+      const tl = gsap.timeline({ delay: window.navJumpDelay ? 0.06 : 0.1 });
 
       tl
         .to(sideTag, { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out' }, 0)

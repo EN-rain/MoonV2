@@ -9,6 +9,7 @@ import Hero from './components/Hero/Hero';
 import About from './components/About/About';
 import Games from './components/Games/Games';
 import Devlog from './components/Devlog/Devlog';
+import DevlogDetail from './components/Devlog/DevlogDetail';
 import Support from './components/Support/Support';
 import Contact from './components/Contact/Contact';
 
@@ -125,6 +126,9 @@ export default function App() {
   const [loading, setLoading] = useState(() => sessionStorage.getItem(PRELOAD_KEY) !== 'true');
   const [activeIdx, setActiveIdx] = useState(0);
   const [visibleStr, setVisibleStr] = useState('0');
+  const [path, setPath] = useState(() => window.location.pathname);
+  const devlogMatch = path.match(/^\/devlog\/([^/]+)$/);
+  const devlogPostId = devlogMatch?.[1] ?? null;
 
   const stageRef = useRef(null);
   const panelRefs = useRef([]);
@@ -136,6 +140,12 @@ export default function App() {
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    const handleRoute = () => setPath(window.location.pathname);
+    window.addEventListener('popstate', handleRoute);
+    return () => window.removeEventListener('popstate', handleRoute);
+  }, []);
+
   const applyTransition = useCallback((chapter, p) => {
     const from = panelRefs.current[chapter];
     const to = panelRefs.current[chapter + 1];
@@ -145,6 +155,9 @@ export default function App() {
     panelRefs.current.forEach((panel, i) => {
       if (i !== chapter && i !== chapter + 1) {
         gsap.set(panel, { opacity: 0, zIndex: 0, x: 0, y: 0, scale: 1, filter: 'none', clipPath: 'none', rotate: 0 });
+        if (panel.firstElementChild) {
+          gsap.set(panel.firstElementChild, { clearProps: 'backgroundColor' });
+        }
       }
     });
 
@@ -176,56 +189,130 @@ export default function App() {
         break;
       }
 
-      /* ─── T1: About → Games ─── SLIDE LEFT with scale-in ─── */
+      /* ─── T1: About → Games ─── CONTENT SLIDE ─── */
       case 1: {
-        // About slides out left with blur
+        const aboutContent = from.querySelectorAll('[data-about-content]');
+        const gamesContent = to.querySelectorAll('[data-games-content]');
+        const gamesBg = to.querySelector('[data-games-bg]');
+        const pEase = gsap.parseEase('power2.inOut')(p);
+        const gamesFade = gsap.utils.clamp(0, 1, (pEase - 0.15) / 0.85);
+        
+        // Keep panels stacked and fixed
         gsap.set(from, {
-          x: `${-p * 100}vw`,
-          opacity: 1 - p * 0.6,
-        });
-        // Games slides in from right
-        gsap.set(to, {
-          x: `${(1 - p) * 100}vw`,
-          scale: 0.96 + p * 0.04,
+          x: 0,
+          opacity: 1,
+          scale: 1,
+          filter: 'none',
           clipPath: 'none',
+          zIndex: 5
         });
+        if (from.firstElementChild) {
+          gsap.set(from.firstElementChild, {
+            backgroundColor: `rgba(8,8,8,${pEase})`,
+          });
+        }
+        
+        gsap.set(to, {
+          x: 0,
+          opacity: pEase,
+          scale: 1,
+          filter: 'none',
+          clipPath: 'none',
+          zIndex: 10
+        });
+
+        // About content slides out to the left
+        gsap.set(aboutContent, {
+          x: -pEase * 150,
+          opacity: 1 - pEase * 0.5,
+          filter: `blur(${pEase * 5}px)`,
+        });
+        
+        // Games content slides in from the right
+        gsap.set(gamesContent, {
+          x: (1 - pEase) * 150,
+          opacity: gamesFade,
+          filter: `blur(${(1 - gamesFade) * 10}px)`,
+        });
+        
+        if (gamesBg) {
+          gsap.set(gamesBg, {
+            opacity: pEase,
+            scale: 1,
+            filter: 'none',
+          });
+        }
         break;
       }
 
-      /* ─── T2: Games → Devlog ─── RED CURTAIN SWEEP ─── */
+      /* ─── T2: Games → Devlog ─── RED CURTAIN SLANTED WIPE ─── */
       case 2: {
-        // Games stays, curtain covers it, then Devlog revealed
-        gsap.set(from, { opacity: p < 0.5 ? 1 : 0, zIndex: 10 });
-        gsap.set(to, { opacity: p > 0.5 ? 1 : 0, zIndex: 5 });
-        // Curtain: grows 0→50% then recedes 50→100%
-        if (curtainRef.current) {
-          if (p < 0.5) {
+        if (p < 0.5) {
+          const progress = p * 2;
+          const pEaseIn = gsap.parseEase("power2.in")(progress);
+          
+          gsap.set(from, { 
+            opacity: 1, 
+            zIndex: 10,
+            x: pEaseIn * -30, // slide left slightly
+            scale: 1 - pEaseIn * 0.04,
+            filter: `blur(${pEaseIn * 8}px)`,
+            clipPath: 'none'
+          });
+          gsap.set(to, { opacity: 0, zIndex: 5 });
+          
+          if (curtainRef.current) {
+            // Curtain sweeps in from left with \ slant
+            const topX = progress * 140;
+            const botX = progress * 140 - 40;
             gsap.set(curtainRef.current, {
-              clipPath: `inset(0 ${(1 - p * 2) * 100}% 0 0)`,
+              clipPath: `polygon(0 0, ${topX}% 0, ${botX}% 100%, 0 100%)`,
             });
-          } else {
+          }
+        } else {
+          const progress = (p - 0.5) * 2;
+          const pEaseOut = gsap.parseEase("power2.out")(progress);
+          
+          gsap.set(from, { opacity: 0, zIndex: 5 });
+          gsap.set(to, { 
+            opacity: 1, 
+            zIndex: 10,
+            x: 30 * (1 - pEaseOut), // slide in from right slightly
+            scale: 1 - 0.04 * (1 - pEaseOut),
+            filter: `blur(${(1 - pEaseOut) * 8}px)`,
+            clipPath: 'none'
+          });
+          
+          if (curtainRef.current) {
+            // Curtain sweeps out to right with \ slant
+            const topX = progress * 140;
+            const botX = progress * 140 - 40;
             gsap.set(curtainRef.current, {
-              clipPath: `inset(0 0 0 ${(p - 0.5) * 2 * 100}%)`,
+              clipPath: `polygon(${topX}% 0, 100% 0, 100% 100%, ${botX}% 100%)`,
             });
           }
         }
         break;
       }
 
-      /* ─── T3: Devlog → Support ─── SCALE DOWN + BLUR (Devlog shrinks into dot) ─── */
+      /* ─── T3: Devlog → Support ─── SCALE DOWN IRIS OUT ─── */
       case 3: {
-        // Support stays underneath while Devlog is clipped away from the center.
+        const pEase = gsap.parseEase('power2.inOut')(p);
+        
+        // Support emerges from the background
         gsap.set(to, {
           zIndex: 5,
-          scale: 1,
-          opacity: 1,
+          scale: 0.95 + pEase * 0.05,
+          opacity: pEase,
+          filter: `blur(${(1 - pEase) * 10}px)`,
           clipPath: 'none',
         });
+        // Devlog shrinks into a dot
         gsap.set(from, {
           zIndex: 10,
-          scale: 1,
+          scale: 1 + pEase * 0.15,
           opacity: 1,
-          clipPath: `circle(${(1 - p) * 100}% at 50% 50%)`,
+          clipPath: `circle(${(1 - pEase) * 100}% at 50% 50%)`,
         });
         break;
       }
@@ -250,7 +337,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (loading) return;
+    if (loading || devlogPostId) return;
 
     // Set initial panel states
     panelRefs.current.forEach((panel, i) => {
@@ -259,7 +346,7 @@ export default function App() {
 
     const totalScroll = (N - 1) * CHAPTER_SCROLL;
 
-    ScrollTrigger.create({
+    const trigger = ScrollTrigger.create({
       trigger: scrollRoot.current,
       start: 'top top',
       end: `+=${totalScroll}`,
@@ -333,8 +420,29 @@ export default function App() {
       },
     });
 
+    const returnSection = sessionStorage.getItem('moonv2:return-section');
+    if (returnSection !== null) {
+      sessionStorage.removeItem('moonv2:return-section');
+      const sectionIndex = Number(returnSection);
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: sectionIndex * CHAPTER_SCROLL, behavior: 'auto' });
+        trigger.update();
+        ScrollTrigger.update();
+      });
+    }
+
     return () => ScrollTrigger.getAll().forEach(t => t.kill());
-  }, [loading, applyTransition]);
+  }, [loading, applyTransition, devlogPostId]);
+
+  if (devlogPostId) {
+    return (
+      <>
+        <style>{sharedStyles}</style>
+        {loading && <Preloader assets={PRELOAD_ASSETS} onComplete={handlePreloaderComplete} />}
+        {!loading && <DevlogDetail postId={devlogPostId} />}
+      </>
+    );
+  }
 
   return (
     <>
@@ -367,7 +475,10 @@ export default function App() {
               id={`panel-${SECTIONS[i].toLowerCase()}`}
               style={{ opacity: i === 0 ? 1 : 0, zIndex: i === 0 ? 10 : 0 }}
             >
-              <Section isActive={!loading && visibleStr.split(',').includes(String(i))} />
+              <Section
+                isActive={!loading && visibleStr.split(',').includes(String(i))}
+                suppressIntro={i === 2 && visibleStr === '1,2'}
+              />
             </div>
           ))}
         </div>

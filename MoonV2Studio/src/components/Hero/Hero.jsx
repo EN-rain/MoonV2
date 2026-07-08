@@ -39,7 +39,7 @@ export default function Hero({ isActive }) {
     setHidden();
     
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.2 });
+      const tl = gsap.timeline({ delay: window.navJumpDelay ? 0.06 : 0.2 });
 
     // Tag fade up
     tl.to(tagRef.current, { opacity: 1, x: 0, duration: 0.7, ease: 'power3.out' }, 0);

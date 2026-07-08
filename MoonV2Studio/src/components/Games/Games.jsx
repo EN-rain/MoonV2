@@ -10,7 +10,7 @@ const GAMES = [
   { id: 'nimbus',     img: null,                           title: 'NIMBUS',     genre: 'ROGUELITE · PLATFORMER',        year: '2026', status: 'COMING SOON'    },
 ];
 
-export default function Games({ isActive }) {
+export default function Games({ isActive, suppressIntro = false }) {
   const sectionRef    = useRef(null);
   const headerRef     = useRef(null);
   const bgRef         = useRef(null);
@@ -18,6 +18,7 @@ export default function Games({ isActive }) {
   const listRef       = useRef(null);
   const itemRefs      = useRef([]);
   const infoRef       = useRef(null);
+  const managedIntroRef = useRef(false);
   const [activeIdx, setActiveIdx] = useState(0);
 
   /* ── GSAP entrance ── */
@@ -31,12 +32,38 @@ export default function Games({ isActive }) {
       gsap.set(items, { opacity: 0, x: 40 });
       gsap.set(infoRef.current, { opacity: 0, y: 16 });
     };
+    const setContentShown = () => {
+      gsap.set(titleLines, { y: '0%', skewY: 0 });
+      gsap.set(items, { opacity: 1, x: 0 });
+      gsap.set(infoRef.current, { opacity: 1, y: 0 });
+    };
 
-    if (!isActive) { setHidden(); return; }
+    if (!isActive) {
+      managedIntroRef.current = false;
+      setHidden();
+      return;
+    }
+
+    if (suppressIntro) {
+      managedIntroRef.current = true;
+      gsap.set(bgRef.current, { opacity: 0, scale: 1 });
+      gsap.set(headerRef.current, { opacity: 0, x: 120, filter: 'blur(10px)' });
+      gsap.set(listRef.current, { opacity: 0, x: 120, filter: 'blur(10px)' });
+      setContentShown();
+      return;
+    }
+
+    if (managedIntroRef.current) {
+      managedIntroRef.current = false;
+      setContentShown();
+      gsap.set(bgRef.current, { opacity: 1, scale: 1 });
+      gsap.set([headerRef.current, listRef.current], { opacity: 1, x: 0, filter: 'none' });
+      return;
+    }
 
     setHidden();
     const ctx = gsap.context(() => {
-      const baseDelay = window.navJumpDelay ? 1.0 : 0.2;
+      const baseDelay = window.navJumpDelay ? 0.06 : 0.2;
       const tl = gsap.timeline({ delay: baseDelay });
       tl.to(bgRef.current, { opacity: 1, scale: 1, duration: 1.4, ease: 'power3.out' }, 0)
         .to(titleLines, { y: '0%', skewY: 0, duration: 1.0, ease: 'power4.out', stagger: 0.1 }, 0.2)
@@ -44,7 +71,7 @@ export default function Games({ isActive }) {
         .to(infoRef.current, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.7);
     }, sectionRef);
     return () => ctx.revert();
-  }, [isActive]);
+  }, [isActive, suppressIntro]);
 
   /* ── Switch game ── */
   const switchGame = (i) => {
@@ -72,7 +99,7 @@ export default function Games({ isActive }) {
     <section ref={sectionRef} className={styles.games} id="games">
 
       {/* Full-bleed bg stack */}
-      <div ref={bgRef} className={styles.bgStack}>
+      <div ref={bgRef} className={styles.bgStack} data-games-bg>
         {GAMES.map(({ id, img }, i) => (
           <div
             key={id}
@@ -91,7 +118,7 @@ export default function Games({ isActive }) {
       </div>
 
       {/* Left — section label + big title */}
-      <div ref={headerRef} className={styles.labelCol}>
+      <div ref={headerRef} className={styles.labelCol} data-games-content>
         <div className={styles.sideTag}>
           <span className={styles.tagNum}>03</span>
           <span className={styles.tagBar} />
@@ -110,7 +137,7 @@ export default function Games({ isActive }) {
       </div>
 
       {/* Right — numbered selector list */}
-      <nav ref={listRef} className={styles.selector}>
+      <nav ref={listRef} className={styles.selector} data-games-content>
         {GAMES.map(({ id, title }, i) => (
           <button
             key={id}

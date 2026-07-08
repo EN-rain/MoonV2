@@ -132,6 +132,44 @@
   clip-path: polygon(0 55%, 100% 45%, 100% 100%, 0 100%);
 }
 
+.bladeInner {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+}
+
+.bladeLinkWrap {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.bladeLinkNum {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--white);
+  min-width: 28px;
+}
+
+.bladeBigLink {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2rem, 4.5vw, 5rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
 .overlayInner {
   position: relative;
   z-index: 2;

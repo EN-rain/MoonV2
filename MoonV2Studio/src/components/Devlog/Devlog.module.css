@@ -8,10 +8,13 @@
   flex-direction: column;
   overflow: hidden;
 }
+
 .devlog::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--black-border), transparent);
   z-index: 10;
@@ -19,7 +22,8 @@
 
 .sideTag {
   position: absolute;
-  left: 20px; top: 50%;
+  left: 20px;
+  top: 50%;
   transform: translateY(-50%) rotate(-90deg);
   display: flex;
   align-items: center;
@@ -27,8 +31,20 @@
   transform-origin: center;
   z-index: 20;
 }
-.tagNum   { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; color: var(--red); }
-.tagLabel { font-size: 9px;  font-weight: 600; letter-spacing: 0.3em; color: var(--white-muted); }
+
+.tagNum {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--red);
+}
+
+.tagLabel {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  color: var(--white-muted);
+}
 
 /* â”€â”€ Accordion container â”€â”€ */
 .accordion {
@@ -47,9 +63,12 @@
   flex: 1;
   contain: layout paint style;
   transition: flex 0.42s cubic-bezier(0.77, 0, 0.175, 1);
-  border-right: 1px solid rgba(255,255,255,0.06);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
 }
-.slice:last-child { border-right: none; }
+
+.slice:last-child {
+  border-right: none;
+}
 
 /* Active slice expands to dominate */
 .sliceActive {
@@ -60,13 +79,15 @@
 .sliceImg {
   position: absolute;
   inset: 0;
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   opacity: 0.78;
   transition: opacity 0.25s ease, transform 0.45s ease;
   transform: scale(1.04);
   will-change: transform, opacity;
 }
+
 .sliceActive .sliceImg {
   opacity: 1;
   transform: scale(1);
@@ -77,11 +98,12 @@
   position: absolute;
   inset: 0;
   /* By default: heavy dark to show almost nothing */
-  background: linear-gradient(to top, rgba(8,8,8,0.96) 0%, rgba(8,8,8,0.42) 100%);
+  background: linear-gradient(to top, rgba(8, 8, 8, 0.96) 0%, rgba(8, 8, 8, 0.42) 100%);
   opacity: 1;
   transition: opacity 0.3s ease;
   z-index: 1;
 }
+
 .sliceActive .sliceOverlay {
   opacity: 0.72;
 }
@@ -100,6 +122,7 @@
   transition: opacity 0.4s ease;
   padding: 20px 0;
 }
+
 .sliceActive .sliceCollapsed {
   opacity: 0;
   pointer-events: none;
@@ -111,12 +134,13 @@
   letter-spacing: 0.3em;
   color: var(--red);
 }
+
 .sliceVertTitle {
   font-family: 'Outfit', sans-serif;
   font-size: clamp(9px, 1.1vw, 14px);
   font-weight: 800;
   letter-spacing: 0.15em;
-  color: rgba(245,245,245,0.6);
+  color: rgba(245, 245, 245, 0.6);
   text-transform: uppercase;
   /* Rotate vertically */
   writing-mode: vertical-rl;
@@ -125,7 +149,11 @@
   line-height: 1;
   transition: color 0.3s;
 }
-.slice:hover .sliceVertTitle { color: var(--white); }
+
+.slice:hover .sliceVertTitle {
+  color: var(--white);
+}
+
 .sliceVertDate {
   font-size: 8px;
   font-weight: 600;
@@ -149,6 +177,7 @@
   transition: opacity 0.35s ease 0.15s;
   pointer-events: none;
 }
+
 .sliceActive .sliceExpanded {
   opacity: 1;
   pointer-events: auto;
@@ -161,6 +190,7 @@
   /* Push down from top of screen, clear the floatLabel */
   padding-top: 100px;
 }
+
 .sliceTag {
   font-size: 8px;
   font-weight: 700;
@@ -170,11 +200,12 @@
   padding: 3px 10px;
   text-transform: uppercase;
 }
+
 .sliceTagNum {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.2em;
-  color: rgba(245,245,245,0.25);
+  color: rgba(245, 245, 245, 0.25);
 }
 
 .sliceBottom {
@@ -182,23 +213,27 @@
   flex-direction: column;
   gap: 10px;
 }
+
 .sliceMeta {
   display: flex;
   align-items: baseline;
   gap: 12px;
 }
+
 .sliceDate {
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.2em;
   color: var(--red);
 }
+
 .sliceYear {
   font-size: 9px;
   font-weight: 600;
   letter-spacing: 0.15em;
   color: var(--white-muted);
 }
+
 .sliceTitle {
   font-family: 'Outfit', sans-serif;
   font-size: clamp(18px, 2.5vw, 32px);
@@ -208,13 +243,19 @@
   text-transform: uppercase;
   line-height: 1;
 }
+
 .sliceExcerpt {
   font-size: 11px;
-  color: rgba(245,245,245,0.55);
+  color: rgba(245, 245, 245, 0.55);
   line-height: 1.75;
   max-width: 380px;
 }
+
 .sliceCta {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.25em;
@@ -223,12 +264,79 @@
   width: fit-content;
   transition: letter-spacing 0.25s;
 }
-.sliceCta:hover { letter-spacing: 0.4em; }
+
+.sliceCta:hover {
+  letter-spacing: 0.4em;
+}
+
+.routePortal {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  overflow: hidden;
+  /* Wipe comes in from left — clip hides it initially */
+  clip-path: inset(0 100% 0 0);
+  background: #0a0a0a;
+}
+
+.portalCore {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  text-align: center;
+  padding: 40px;
+}
+
+/* Thin red accent line that runs under the kicker */
+.portalCore::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scaleX(0);
+  width: 48px;
+  height: 2px;
+  background: var(--red);
+  margin-top: -64px;
+  transition: none;
+}
+
+.portalKicker {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.6em;
+  color: var(--red);
+  text-transform: uppercase;
+  opacity: 0;
+}
+
+.portalTitle {
+  width: min(1120px, 90vw);
+  text-align: center;
+  max-width: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(3rem, 8.5vw, 8.5rem);
+  font-weight: 900;
+  line-height: 0.88;
+  color: var(--white);
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  opacity: 0;
+}
 
 /* â”€â”€ Active bottom accent bar â”€â”€ */
 .sliceBar {
   position: absolute;
-  bottom: 0; left: 0; right: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   height: 2px;
   background: var(--red);
   transform: scaleX(0);
@@ -236,15 +344,50 @@
   transition: transform 0.5s var(--ease-out);
   z-index: 4;
 }
-.sliceActive .sliceBar { transform: scaleX(1); }
+
+.sliceActive .sliceBar {
+  transform: scaleX(1);
+}
 
 /* â”€â”€ Responsive â”€â”€ */
 @media (max-width: 900px) {
-  .accordion { flex-direction: column; }
-  .slice { flex: 1; min-height: 80px; transition: flex 0.35s ease; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
-  .sliceActive { flex: 4; }
-  .sliceCollapsed { flex-direction: row; gap: 12px; }
-  .sliceVertTitle, .sliceVertDate { writing-mode: horizontal-tb; transform: none; }
-  .sliceBar { width: 2px; height: 100%; bottom: 0; right: 0; left: auto; transform: scaleY(0); }
-  .sliceActive .sliceBar { transform: scaleY(1); }
+  .accordion {
+    flex-direction: column;
+  }
+
+  .slice {
+    flex: 1;
+    min-height: 80px;
+    transition: flex 0.35s ease;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .sliceActive {
+    flex: 4;
+  }
+
+  .sliceCollapsed {
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .sliceVertTitle,
+  .sliceVertDate {
+    writing-mode: horizontal-tb;
+    transform: none;
+  }
+
+  .sliceBar {
+    width: 2px;
+    height: 100%;
+    bottom: 0;
+    right: 0;
+    left: auto;
+    transform: scaleY(0);
+  }
+
+  .sliceActive .sliceBar {
+    transform: scaleY(1);
+  }
 }
