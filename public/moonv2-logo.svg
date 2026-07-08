@@ -1,0 +1,37 @@
+<svg width="1800" height="520" viewBox="0 0 1800 520" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">MoonV2 Studio Logo</title>
+  <desc id="desc">MoonV2 Studio wordmark with a geometric crescent icon, neon crimson slash, and violet sci-fi glow on a transparent background.</desc>
+  <defs>
+    <filter id="softGlow" x="-40%" y="-70%" width="180%" height="240%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0.52 0 0 0 0.28  0 0.08 0 0 0  0.95 0 1 0 1  0 0 0 0.8 0" result="glow"/>
+      <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="crescent" x1="104" y1="71" x2="380" y2="442" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#343844"/><stop offset="0.45" stop-color="#07080D"/><stop offset="1" stop-color="#1E2028"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="86" y1="54" x2="407" y2="472" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#BEAAFF"/><stop offset="0.52" stop-color="#6847FF"/><stop offset="1" stop-color="#FF174D"/>
+    </linearGradient>
+    <linearGradient id="word" x1="514" y1="160" x2="1490" y2="370" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/><stop offset="0.42" stop-color="#C9C2EF"/><stop offset="1" stop-color="#7D7697"/>
+    </linearGradient>
+    <linearGradient id="red" x1="220" y1="432" x2="348" y2="88" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF174D"/><stop offset="0.48" stop-color="#FF456F"/><stop offset="1" stop-color="#FFE9EF"/>
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#softGlow)">
+    <path d="M322 55C238 62 164 113 127 190C83 281 110 390 191 450C244 489 311 502 373 485C293 548 178 546 101 479C13 401 3 267 80 178C144 105 246 84 332 119C310 129 291 145 277 166C248 209 250 267 282 308C315 349 370 366 421 351C408 418 370 475 315 514C434 472 501 346 467 224C447 151 390 90 322 55Z" fill="url(#crescent)" stroke="url(#rim)" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M319 78L196 438" stroke="url(#red)" stroke-width="26" stroke-linecap="round"/>
+    <path d="M355 155L306 277H364L300 397" stroke="#FAF7FF" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M157 170L211 347L265 170" stroke="#FAF7FF" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <g filter="url(#softGlow)">
+    <text x="540" y="284" font-family="Orbitron, Rajdhani, Eurostile, Arial Black, Arial, sans-serif" font-size="118" font-weight="900" letter-spacing="10" fill="url(#word)">MOONV2</text>
+    <text x="548" y="360" font-family="Inter, Rajdhani, Arial, sans-serif" font-size="34" font-weight="600" letter-spacing="18" fill="#9B8DFF">SOLO INDIE GAME STUDIO</text>
+    <path d="M545 388H1218" stroke="#FF174D" stroke-width="5" stroke-linecap="round" opacity="0.92"/>
+    <path d="M545 410H932" stroke="#7E57FF" stroke-width="3" stroke-linecap="round" opacity="0.55"/>
+  </g>
+</svg>
