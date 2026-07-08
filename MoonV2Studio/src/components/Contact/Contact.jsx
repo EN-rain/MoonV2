@@ -79,7 +79,6 @@ export default function Contact({ isActive }) {
             href="mailto:hello@moonv2.studio"
             className="btn-primary"
             id="contact-cta"
-            onMouseDown={buttonRipple}
           >
             GET IN TOUCH
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
