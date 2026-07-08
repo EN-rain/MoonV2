@@ -33,13 +33,20 @@ const sharedStyles = `
     width: 100%;
     height: 100vh;
     overflow: hidden;
+    /* Force an isolated stacking context so panel z-indexes are evaluated
+       relative to each other, not the global document context */
+    isolation: isolate;
+    z-index: 1;
   }
   .s-panel {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    will-change: transform, opacity, clip-path;
+    /* Only hint transform and opacity — NOT clip-path.
+       Pre-promoting clip-path to a GPU layer causes the compositor to bypass
+       CSS z-index ordering when clip-path changes dynamically. */
+    will-change: transform, opacity;
   }
 
   /* ── Red curtain overlay (for T2) ── */
@@ -169,23 +176,18 @@ export default function App() {
       /* ─── T0: Hero → About ─── ZOOM-THROUGH: hero scales away, about circle-reveals ─── */
       case 0: {
         const fadeEnd = 0.45;
-        const revealStart = 0.25;
         const heroP = Math.min(p / fadeEnd, 1);
-        const aboutP = Math.max(0, (p - revealStart) / (1 - revealStart));
+        const aboutP = p;
 
-        gsap.set(to, { zIndex: 15 });
-        gsap.set(from, { zIndex: 10 });
-
-        // Hero zooms forward and fades
-        gsap.set(from, {
-          scale: 1 + heroP * 0.25,
-          opacity: 1,
-        });
-        // About revealed via expanding circle from center
-        gsap.set(to, {
-          clipPath: `circle(${aboutP * 100}% at 50% 50%)`,
-          scale: 1,
-        });
+        // About MUST be above Hero — Hero's scale transform creates a stacking context
+        // that can break sibling z-index ordering in some browsers.
+        // Setting Hero zIndex to 0 and About to 20 guarantees proper layering.
+        gsap.set(from, { zIndex: 0, scale: 1 + heroP * 0.25, opacity: 1 });
+        gsap.set(to, { zIndex: 20, opacity: 1, scale: 1, clipPath: `circle(${aboutP * 150}% at 50% 50%)` });
+        
+        // Ensure About's internal content is reset in case we jumped here from T1
+        // (T1 applies x, opacity, and blur to these elements which would get stuck)
+        gsap.set(to.querySelectorAll('[data-about-content]'), { x: 0, opacity: 1, filter: 'none' });
         break;
       }
 
@@ -206,11 +208,6 @@ export default function App() {
           clipPath: 'none',
           zIndex: 5
         });
-        if (from.firstElementChild) {
-          gsap.set(from.firstElementChild, {
-            backgroundColor: `rgba(8,8,8,${pEase})`,
-          });
-        }
         
         gsap.set(to, {
           x: 0,
@@ -247,6 +244,11 @@ export default function App() {
 
       /* ─── T2: Games → Process ─── RED CURTAIN SLANTED WIPE ─── */
       case 2: {
+        // Ensure Games internal content is reset in case we jumped here from T1
+        gsap.set(from.querySelectorAll('[data-games-content]'), { x: 0, opacity: 1, filter: 'none' });
+        const gamesBg = from.querySelector('[data-games-bg]');
+        if (gamesBg) gsap.set(gamesBg, { opacity: 1, scale: 1, filter: 'none' });
+
         if (p < 0.5) {
           const progress = p * 2;
           const pEaseIn = gsap.parseEase("power2.in")(progress);
@@ -339,9 +341,25 @@ export default function App() {
   useEffect(() => {
     if (loading || processPostId) return;
 
-    // Set initial panel states
+    // Fully reset ALL panels — clears any stale inline styles from a previous
+    // scroll session (scale, clipPath, filter, transform, etc.) before the new
+    // ScrollTrigger takes over. Without this, the T0 circle transition breaks
+    // when returning to home after a full scroll-through.
     panelRefs.current.forEach((panel, i) => {
-      gsap.set(panel, { opacity: i === 0 ? 1 : 0, zIndex: i === 0 ? 10 : 0 });
+      gsap.set(panel, { clearProps: 'all' });
+      gsap.set(panel, {
+        opacity : i === 0 ? 1 : 0,
+        zIndex  : i === 0 ? 10 : 0,
+        scale   : 1,
+        x: 0, y: 0,
+        rotate  : 0,
+        filter  : 'none',
+        clipPath: 'none',
+      });
+      // Also clear any background-color written directly on child elements
+      if (panel.firstElementChild) {
+        gsap.set(panel.firstElementChild, { clearProps: 'backgroundColor' });
+      }
     });
 
     const totalScroll = (N - 1) * CHAPTER_SCROLL;

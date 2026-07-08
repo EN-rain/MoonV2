@@ -111,51 +111,80 @@
 }
 
 /* Right process cards */
-.right { display: flex; flex-direction: column; gap: 2px; }
+.right {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  position: relative;
+}
+/* Timeline track removed */
 
 .card {
-  display: grid;
-  grid-template-columns: 32px 1fr 24px;
-  align-items: center;
-  gap: 20px;
-  padding: 28px 24px;
-  background: var(--black-card);
-  border: 1px solid var(--black-border);
-  border-left: 2px solid transparent;
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  position: relative;
+  z-index: 1;
   cursor: default;
-  transition: border-color 0.3s, background 0.3s;
-  /* GSAP initial state overridden inline, but keep clean base */
+  transition: transform 0.3s ease;
 }
 .card:hover {
-  border-left-color: var(--red);
-  background: rgba(170,59,255,0.04);
+  transform: translateX(10px);
 }
+
 .cardNum {
   font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  color: var(--red);
-}
-.cardTitle {
-  font-size: 14px;
   font-weight: 800;
   letter-spacing: 0.15em;
   color: var(--white);
-  text-transform: uppercase;
+  background: var(--black);
+  border: 1px solid var(--red);
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(170,59,255,0.3);
+  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
 }
+.card:hover .cardNum {
+  background: var(--red);
+  color: var(--white);
+  box-shadow: 0 0 20px rgba(170,59,255,0.6);
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  padding-top: 4px;
+}
+
+.cardTitle {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: var(--white);
+  text-transform: uppercase;
+  transition: color 0.3s;
+}
+.card:hover .cardTitle {
+  color: var(--red);
+}
+
 .cardSub {
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.1em;
   color: var(--white-muted);
-  margin-top: 4px;
+  margin-top: 6px;
+  line-height: 1.5;
 }
+
 .cardArrow {
-  font-size: 16px;
-  color: var(--white-muted);
-  transition: color 0.3s, transform 0.3s;
+  display: none; /* Hide the clunky arrow */
 }
-.card:hover .cardArrow { color: var(--red); transform: translateX(4px); }
 
 @media (max-width: 1100px) {
   .inner { grid-template-columns: 1fr 1fr; }

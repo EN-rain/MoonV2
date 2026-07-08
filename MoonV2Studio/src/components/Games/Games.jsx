@@ -3,10 +3,10 @@ import { gsap } from 'gsap';
 import styles from './Games.module.css';
 
 const GAMES = [
-  { id: 'emberfall',  img: '/images/game_emberfall.png',  title: 'EMBERFALL',  genre: 'DARK FANTASY · ACTION RPG',    year: '2024', status: 'IN DEVELOPMENT' },
-  { id: 'aeondrive',  img: '/images/game_aeondrive.png',  title: 'AEON DRIVE', genre: 'CYBERPUNK · PLATFORMER',        year: '2025', status: 'PROTOTYPE'      },
-  { id: 'lunaris',    img: '/images/game_lunaris.png',    title: 'LUNARIS',    genre: 'ADVENTURE · PUZZLE',            year: '2025', status: 'ALPHA'          },
-  { id: 'fracture',   img: '/images/game_fracture.png',   title: 'FRACTURE',   genre: 'TACTICAL · STRATEGY',           year: '2026', status: 'CONCEPT'        }
+  { id: 'emberfall',  img: '/images/game_emberfall.png',  title: 'CINDER',  genre: 'DARK FANTASY · ACTION RPG',    year: '2024', status: 'IN DEVELOPMENT' },
+  { id: 'aeondrive',  img: '/images/game_aeondrive.png',  title: 'OVERRIDE', genre: 'CYBERPUNK · PLATFORMER',        year: '2025', status: 'PROTOTYPE'      },
+  { id: 'lunaris',    img: '/images/game_lunaris.png',    title: 'SOMNIUM',    genre: 'ADVENTURE · PUZZLE',            year: '2025', status: 'ALPHA'          },
+  { id: 'fracture',   img: '/images/game_fracture.png',   title: 'BREACH',   genre: 'TACTICAL · STRATEGY',           year: '2026', status: 'CONCEPT'        }
 ];
 
 export default function Games({ isActive, suppressIntro = false }) {

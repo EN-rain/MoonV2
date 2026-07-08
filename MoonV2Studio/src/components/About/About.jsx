@@ -123,7 +123,7 @@ export default function About({ isActive }) {
               className={styles.card}
             >
               <span className={styles.cardNum}>{num}</span>
-              <div>
+              <div className={styles.cardContent}>
                 <h3 className={styles.cardTitle}>{title}</h3>
                 <p className={styles.cardSub}>{sub}</p>
               </div>
