@@ -320,18 +320,19 @@ export default function App() {
         break;
       }
 
-      /* ─── T4: Support → Contact ─── DIAGONAL REVEAL (top-right to bottom-left) ─── */
       case 4: {
-        // Support exits via diagonal clip
+        // Support exits via a clean diagonal wipe (top-left to bottom-right)
         const pct = p * 200;
         gsap.set(from, {
-          clipPath: `polygon(${pct}% 0, 100% 0, 100% ${Math.max(0, 100 - pct)}%, 0 ${Math.max(0, 100 - pct)}%, 0 0)`,
+          zIndex: 10,
           opacity: 1,
+          clipPath: `polygon(${pct}% 0%, 100% 0%, 100% 100%, 0% 100%, 0% ${pct}%)`,
         });
-        // Contact comes in clean
+        // Contact is fully visible underneath, waiting to be revealed
         gsap.set(to, {
+          zIndex: 5,
           scale: 1,
-          opacity: p > 0.4 ? (p - 0.4) / 0.6 : 0,
+          opacity: 1,
           clipPath: 'none',
         });
         break;
