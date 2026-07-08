@@ -1,7 +1,6 @@
 import { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import anime from 'animejs';
 import styles from './Support.module.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -168,7 +167,7 @@ export default function Support({ isActive }) {
         {/* Center orb */}
         <div className={styles.center}>
           <div className={styles.orb}>
-            <img src="/images/hero_sphere.png" alt="Support orb" className={styles.orbImg} />
+            <img src="/images/support_orb.png" alt="Support orb device" className={styles.orbImg} />
             <div className={styles.orbGlow} />
           </div>
         </div>

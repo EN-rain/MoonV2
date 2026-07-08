@@ -80,7 +80,8 @@
 }
 .footerOrb {
   width: 180px;
-  opacity: 0.7;
+  opacity: 0.85;
+  mix-blend-mode: screen;
   filter: drop-shadow(0 0 30px var(--red-glow));
 }
 

@@ -104,8 +104,8 @@ export default function About({ isActive }) {
         {/* Center image */}
         <div ref={imgRef} className={styles.imgWrap} data-about-content>
           <img
-            src="/images/about_character.png"
-            alt="Developer character art"
+            src="/images/about_crystal.png"
+            alt="Crystal gem object"
             className={styles.img}
           />
           <div className={styles.imgOverlay} />

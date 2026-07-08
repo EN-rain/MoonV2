@@ -101,6 +101,7 @@
 }
 .orbImg {
   width: 100%;
+  mix-blend-mode: screen;
   filter: drop-shadow(0 0 40px var(--red-glow));
   animation: orbFloat 4s ease-in-out infinite;
 }

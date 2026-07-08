@@ -1,7 +1,6 @@
 import { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { buttonRipple } from '../../utils/animeHelpers';
 import styles from './Contact.module.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -102,8 +101,8 @@ export default function Contact({ isActive }) {
             GENRES AND PLATFORMS.
           </p>
           <img
-            src="/images/hero_sphere.png"
-            alt="MOONV2 orb decoration"
+            src="/images/contact_satellite.png"
+            alt="MOONV2 satellite decoration"
             className={styles.footerOrb}
           />
         </div>

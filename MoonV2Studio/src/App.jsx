@@ -108,12 +108,13 @@ const N = SECTIONS.length;
 const CHAPTER_SCROLL = window.innerHeight * 1.5; // Balanced scroll distance
 const PRELOAD_KEY = 'moonv2studio:assets-preloaded';
 const PRELOAD_ASSETS = [
-  '/images/about_character.png',
+  '/images/about_crystal.png',
   '/images/game_emberfall.png',
   '/images/game_aeondrive.png',
   '/images/game_lunaris.png',
   '/images/game_fracture.png',
-  '/images/hero_sphere.png',
+  '/images/support_orb.png',
+  '/images/contact_satellite.png',
 ];
 
 // ── Hold vs Transition Math ──
