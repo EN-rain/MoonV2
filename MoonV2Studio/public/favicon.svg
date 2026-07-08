@@ -1,27 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="MoonV2">
-  <defs>
-    <radialGradient id="bg" cx="30%" cy="22%" r="82%">
-      <stop offset="0" stop-color="#2c1646"/>
-      <stop offset="0.56" stop-color="#0a0710"/>
-      <stop offset="1" stop-color="#050407"/>
-    </radialGradient>
-    <linearGradient id="violet" x1="14" y1="10" x2="52" y2="56" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#f2e7ff"/>
-      <stop offset="0.42" stop-color="#c77dff"/>
-      <stop offset="1" stop-color="#aa3bff"/>
-    </linearGradient>
-    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="2.8" result="blur"/>
-      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.67 0 0 0 0 0.23 0 0 0 0 1 0 0 0 .85 0"/>
-      <feMerge>
-        <feMergeNode/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-  </defs>
-  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
-  <circle cx="32" cy="32" r="24" fill="none" stroke="url(#violet)" stroke-width="3" opacity=".85"/>
-  <path d="M37.8 13.9c-2.1-.9-4.5-1.3-6.9-.9-9.7 1.5-16.5 10.5-15 20.2 1.5 9.7 10.5 16.4 20.2 15 3.3-.5 6.2-1.9 8.5-3.9-1.8.6-3.8.9-5.8.9-9.7 0-17.5-7.8-17.5-17.5 0-6.3 3.3-11.8 8.2-14.9 2.5-1.5 5.3-2.3 8.3-2.2z" fill="#f5f5f5"/>
-  <path filter="url(#glow)" fill="url(#violet)" d="M34.8 16.5 25 35.8h8.4l-2.2 13.7 11.1-20.2h-8.1l.6-12.8z"/>
-  <path fill="#080808" opacity=".46" d="m31.7 34.4 3.1-17.9L25 35.8h8.4l-2.2 13.7 4.6-15.1h-4.1z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="MoonV2 Studio">
+  <!-- Solid black background -->
+  <rect width="64" height="64" rx="16" fill="#080808"/>
+  
+  <!-- Crescent Moon shape -->
+  <path d="M42,18 C46.418,18 50,21.582 50,26 C50,23 48.5,20.5 46,19 C42,16 34,16 28,21 C22,26 21,34 25,39 C29.5,44.5 38,45 43,40 C45.5,37.5 47,34.5 47,31 C47,36 43.418,40 39,40 C31.268,40 25,33.732 25,26 C25,18.268 31.268,12 39,12 C40.063,12 41.099,12.118 42.091,12.336 C42.03,14.185 42,16.082 42,18 Z" fill="#aa3bff" />
+
+  <!-- V2 Monogram -->
+  <text x="32" y="52" font-family="'Inter', 'Outfit', sans-serif" font-weight="900" font-size="14" fill="#f5f5f5" text-anchor="middle" letter-spacing="1">V2</text>
 </svg>
