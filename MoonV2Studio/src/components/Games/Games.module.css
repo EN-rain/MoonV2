@@ -25,7 +25,6 @@
   width: 100%; height: 100%;
   object-fit: cover;
   object-position: center;
-  filter: grayscale(25%) contrast(1.1);
 }
 .bgPlaceholder {
   width: 100%; height: 100%;
@@ -42,11 +41,21 @@
 .bgVignette {
   position: absolute;
   inset: 0;
-  /* Strong gradient from right (selector side) and from bottom */
-  background:
-    linear-gradient(to right,  rgba(8,8,8,0.3) 0%, rgba(8,8,8,0.98) 55%),
-    linear-gradient(to top,    rgba(8,8,8,0.8) 0%, transparent 50%),
-    linear-gradient(to bottom, rgba(8,8,8,0.7) 0%, transparent 30%);
+  /* A unique, premium non-linear easing fade to 100% black */
+  background: 
+    linear-gradient(to right,
+      rgba(0,0,0,0) 0%,
+      rgba(0,0,0,0) 30%,
+      rgba(0,0,0,0.015) 35%,
+      rgba(0,0,0,0.05) 45%,
+      rgba(0,0,0,0.15) 55%,
+      rgba(0,0,0,0.3) 65%,
+      rgba(0,0,0,0.5) 75%,
+      rgba(0,0,0,0.75) 85%,
+      rgba(0,0,0,0.95) 95%,
+      rgba(0,0,0,1) 100%
+    ),
+    radial-gradient(circle at 20% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%);
   pointer-events: none;
 }
 
@@ -119,9 +128,7 @@
   justify-content: center;
   gap: 0;
   width: 320px;
-  border-left: 1px solid rgba(255,255,255,0.06);
-  background: rgba(8,8,8,0.6);
-  backdrop-filter: blur(12px);
+  background: transparent;
   padding: 90px 0 40px;
 }
 
@@ -188,19 +195,10 @@
   flex: 1;
   transition: color 0.2s;
 }
-.selectorItem:hover .selectorTitle { color: var(--white); }
-.selectorActive .selectorTitle { color: var(--white); }
-.selectorArrow {
-  font-size: 12px;
-  color: var(--red);
-  opacity: 0;
-  transform: translateX(-6px);
-  transition: opacity 0.2s, transform 0.2s;
-}
-.selectorItem:hover .selectorArrow,
-.selectorActive .selectorArrow {
-  opacity: 1;
-  transform: translateX(0);
+.selectorItem:hover .selectorTitle,
+.selectorActive .selectorTitle {
+  color: var(--white);
+  transform: translateX(5px);
 }
 
 @media (max-width: 900px) {

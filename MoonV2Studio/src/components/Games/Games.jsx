@@ -6,8 +6,7 @@ const GAMES = [
   { id: 'emberfall',  img: '/images/game_emberfall.png',  title: 'EMBERFALL',  genre: 'DARK FANTASY · ACTION RPG',    year: '2024', status: 'IN DEVELOPMENT' },
   { id: 'aeondrive',  img: '/images/game_aeondrive.png',  title: 'AEON DRIVE', genre: 'CYBERPUNK · PLATFORMER',        year: '2025', status: 'PROTOTYPE'      },
   { id: 'lunaris',    img: '/images/game_lunaris.png',    title: 'LUNARIS',    genre: 'ADVENTURE · PUZZLE',            year: '2025', status: 'ALPHA'          },
-  { id: 'fracture',   img: '/images/game_fracture.png',   title: 'FRACTURE',   genre: 'TACTICAL · STRATEGY',           year: '2026', status: 'CONCEPT'        },
-  { id: 'nimbus',     img: null,                           title: 'NIMBUS',     genre: 'ROGUELITE · PLATFORMER',        year: '2026', status: 'COMING SOON'    },
+  { id: 'fracture',   img: '/images/game_fracture.png',   title: 'FRACTURE',   genre: 'TACTICAL · STRATEGY',           year: '2026', status: 'CONCEPT'        }
 ];
 
 export default function Games({ isActive, suppressIntro = false }) {
@@ -149,7 +148,6 @@ export default function Games({ isActive, suppressIntro = false }) {
             <span className={styles.selectorNum}>{String(i + 1).padStart(2, '0')}</span>
             <span className={styles.selectorDash} />
             <span className={styles.selectorTitle}>{title}</span>
-            <span className={styles.selectorArrow}>→</span>
           </button>
         ))}
       </nav>

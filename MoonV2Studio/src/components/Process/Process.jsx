@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { POSTS } from './posts';
-import styles from './Devlog.module.css';
+import styles from './Process.module.css';
 
 export default function Devlog({ isActive }) {
   const sectionRef     = useRef(null);
@@ -112,33 +112,33 @@ export default function Devlog({ isActive }) {
           const rect = el.getBoundingClientRect();
           return { top: rect.top, left: rect.left, width: rect.width, height: rect.height };
         });
-        sessionStorage.setItem('moonv2:devlog-title-rects', JSON.stringify(wordRects));
-        sessionStorage.setItem('moonv2:devlog-enter', id);
+        sessionStorage.setItem('moonv2:process-title-rects', JSON.stringify(wordRects));
+        sessionStorage.setItem('moonv2:process-enter', id);
         
-        window.history.pushState({}, '', `/devlog/${id}`);
+        window.history.pushState({}, '', `/process/${id}`);
         window.dispatchEvent(new PopStateEvent('popstate'));
         window.scrollTo({ top: 0, behavior: 'auto' });
 
-        // Wait for DevlogDetail to signal it's mounted & rendered
-        // Instantly hide the portal — DevlogDetail will handle the seamless title morph
+        // Wait for ProcessDetail to signal it's mounted & rendered
+        // Instantly hide the portal — ProcessDetail will handle the seamless title morph
         const dropPortal = () => {
           gsap.set(portal, { clipPath: 'inset(0 100% 0 0)', autoAlpha: 0 });
           openingRef.current = false;
         };
 
         const onReady = () => {
-          window.removeEventListener('moonv2:devlog-ready', onReady);
+          window.removeEventListener('moonv2:process-ready', onReady);
           clearTimeout(fallback);
           dropPortal();
         };
 
         // Safety fallback
         const fallback = setTimeout(() => {
-          window.removeEventListener('moonv2:devlog-ready', onReady);
+          window.removeEventListener('moonv2:process-ready', onReady);
           dropPortal();
         }, 2000);
 
-        window.addEventListener('moonv2:devlog-ready', onReady);
+        window.addEventListener('moonv2:process-ready', onReady);
       }, [], 1.08);
   }, []);
 
@@ -163,12 +163,12 @@ export default function Devlog({ isActive }) {
   }, [isActive]);
 
   return (
-    <section ref={sectionRef} className={styles.devlog} id="work">
+    <section ref={sectionRef} className={styles.process} id="work">
 
       {/* Standard side tag */}
       <div ref={tagRef} className={styles.sideTag} style={{ opacity: 0 }}>
         <span className={styles.tagNum}>04</span>
-        <span className={styles.tagLabel}>DEVLOG</span>
+        <span className={styles.tagLabel}>PROCESS</span>
       </div>
 
       {/* Horizontal accordion */}
@@ -215,7 +215,7 @@ export default function Devlog({ isActive }) {
                   </div>
                   <h3 className={styles.sliceTitle}>{title}</h3>
                   <p className={styles.sliceExcerpt}>{excerpt}</p>
-                  <button type="button" className={styles.sliceCta}>READ →</button>
+                  <button type="button" className={styles.sliceCta}>EXPLORE →</button>
                 </div>
               </div>
 
@@ -229,7 +229,7 @@ export default function Devlog({ isActive }) {
       {/* Route transition portal */}
       <div ref={portalRef} className={styles.routePortal} aria-hidden="true">
         <div className={styles.portalCore}>
-          <div ref={portalKickerRef} className={styles.portalKicker}>OPENING DEVLOG</div>
+          <div ref={portalKickerRef} className={styles.portalKicker}>ENTERING PHASE</div>
           <div ref={portalTitleRef} className={styles.portalTitle}>
             {(POSTS[hovered]?.title || '').split(' ').map((word, i, arr) => (
               <span key={i} className={styles.portalWord} style={{ display: 'inline-block' }}>

@@ -1,16 +1,13 @@
 import { useLayoutEffect, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Canvas } from '@react-three/fiber';
 import BoidsCanvas from './BoidsCanvas';
-import HeroSphere from './HeroSphere';
 import styles from './Hero.module.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero({ isActive }) {
   const heroRef    = useRef(null);
-  const sphereWrapRef = useRef(null);
   const tagRef    = useRef(null);
   const subRef    = useRef(null);
   const scrollRef = useRef(null);
@@ -60,12 +57,6 @@ export default function Hero({ isActive }) {
       0.7
     );
 
-    // Sphere orb fade-in
-    tl.to(sphereWrapRef.current,
-      { opacity: 1, duration: 1.8, ease: 'power2.out' },
-      0.4
-    );
-
     });
     return () => ctx.revert();
   }, [isActive]);
@@ -110,14 +101,6 @@ export default function Hero({ isActive }) {
 
       {/* Background */}
       <div className={styles.bg}>
-        <div ref={sphereWrapRef} className={styles.orbContainer} style={{ opacity: 0 }}>
-          {/* React Three Fiber Canvas replacing static image */}
-          <Canvas camera={{ position: [0, 0, 4], fov: 45 }}>
-            <HeroSphere mouseX={mouseX} mouseY={mouseY} />
-          </Canvas>
-          <div className={styles.orbGlow} />
-        </div>
-        
         {/* Boids Canvas replacing old static canvas */}
         <div className={styles.canvasWrap}>
           <BoidsCanvas mouseX={mouseX} mouseY={mouseY} isClicked={isClicked} />

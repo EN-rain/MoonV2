@@ -8,8 +8,8 @@ import Navbar from './components/Navbar/Navbar';
 import Hero from './components/Hero/Hero';
 import About from './components/About/About';
 import Games from './components/Games/Games';
-import Devlog from './components/Devlog/Devlog';
-import DevlogDetail from './components/Devlog/DevlogDetail';
+import Process from './components/Process/Process';
+import ProcessDetail from './components/Process/ProcessDetail';
 import Support from './components/Support/Support';
 import Contact from './components/Contact/Contact';
 
@@ -96,7 +96,7 @@ const sharedStyles = `
   }
 `;
 
-const SECTIONS = ['HERO', 'ABOUT', 'GAMES', 'DEVLOG', 'SUPPORT', 'CONTACT'];
+const SECTIONS = ['HERO', 'ABOUT', 'GAMES', 'PROCESS', 'SUPPORT', 'CONTACT'];
 const N = SECTIONS.length;
 const CHAPTER_SCROLL = window.innerHeight * 1.5; // Balanced scroll distance
 const PRELOAD_KEY = 'moonv2studio:assets-preloaded';
@@ -127,8 +127,8 @@ export default function App() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [visibleStr, setVisibleStr] = useState('0');
   const [path, setPath] = useState(() => window.location.pathname);
-  const devlogMatch = path.match(/^\/devlog\/([^/]+)$/);
-  const devlogPostId = devlogMatch?.[1] ?? null;
+  const processMatch = path.match(/^\/process\/([^/]+)$/);
+  const processPostId = processMatch?.[1] ?? null;
 
   const stageRef = useRef(null);
   const panelRefs = useRef([]);
@@ -245,7 +245,7 @@ export default function App() {
         break;
       }
 
-      /* ─── T2: Games → Devlog ─── RED CURTAIN SLANTED WIPE ─── */
+      /* ─── T2: Games → Process ─── RED CURTAIN SLANTED WIPE ─── */
       case 2: {
         if (p < 0.5) {
           const progress = p * 2;
@@ -295,7 +295,7 @@ export default function App() {
         break;
       }
 
-      /* ─── T3: Devlog → Support ─── SCALE DOWN IRIS OUT ─── */
+      /* ─── T3: Process → Support ─── SCALE DOWN IRIS OUT ─── */
       case 3: {
         const pEase = gsap.parseEase('power2.inOut')(p);
         
@@ -307,7 +307,7 @@ export default function App() {
           filter: `blur(${(1 - pEase) * 10}px)`,
           clipPath: 'none',
         });
-        // Devlog shrinks into a dot
+        // Process shrinks into a dot
         gsap.set(from, {
           zIndex: 10,
           scale: 1 + pEase * 0.15,
@@ -337,7 +337,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (loading || devlogPostId) return;
+    if (loading || processPostId) return;
 
     // Set initial panel states
     panelRefs.current.forEach((panel, i) => {
@@ -358,7 +358,7 @@ export default function App() {
         duration: { min: 0.2, max: 0.8 },
         delay: 0.1,
         ease: "power2.inOut",
-        directional: false // CRITICAL: prevents trackpad bounce from snapping backwards
+        directional: false
       },
       invalidateOnRefresh: true,
       onUpdate: (self) => {
@@ -370,7 +370,6 @@ export default function App() {
         let transP = 0;
 
         for (let i = 0; i < N; i++) {
-          // Inside hold phase?
           if (currentLoc <= accumulated + HOLD) {
             activeChap = i;
             transP = 0;
@@ -378,7 +377,6 @@ export default function App() {
           }
           accumulated += HOLD;
 
-          // Inside transition phase?
           if (i < N - 1) {
             if (currentLoc <= accumulated + TRANS) {
               activeChap = i;
@@ -389,7 +387,6 @@ export default function App() {
           }
         }
 
-        // Final fallback for edge cases
         if (activeChap >= N - 1) {
           activeChap = N - 2;
           transP = 1;
@@ -405,13 +402,11 @@ export default function App() {
         setVisibleStr(newVisibleStr);
         applyTransition(activeChap, transP);
 
-        // Hide curtain when not in T2
         if (curtainRef.current) {
           if (activeChap !== 2 || transP === 0 || transP === 1) {
             gsap.set(curtainRef.current, { clipPath: 'inset(0 100% 0 0)' });
           }
         }
-        // Ensure last panel stays visible at end
         if (p >= 0.99) {
           panelRefs.current.forEach((panel, i) => {
             gsap.set(panel, { opacity: i === N - 1 ? 1 : 0, zIndex: i === N - 1 ? 10 : 0 });
@@ -432,14 +427,14 @@ export default function App() {
     }
 
     return () => ScrollTrigger.getAll().forEach(t => t.kill());
-  }, [loading, applyTransition, devlogPostId]);
+  }, [loading, applyTransition, processPostId]);
 
-  if (devlogPostId) {
+  if (processPostId) {
     return (
       <>
         <style>{sharedStyles}</style>
         {loading && <Preloader assets={PRELOAD_ASSETS} onComplete={handlePreloaderComplete} />}
-        {!loading && <DevlogDetail postId={devlogPostId} />}
+        {!loading && <ProcessDetail postId={processPostId} />}
       </>
     );
   }
@@ -467,7 +462,7 @@ export default function App() {
       <div ref={scrollRoot} style={{ height: `${N * 100}vh` }}>
         {/* Pinned visual stage */}
         <div ref={stageRef} className="panels-stage">
-          {[Hero, About, Games, Devlog, Support, Contact].map((Section, i) => (
+          {[Hero, About, Games, Process, Support, Contact].map((Section, i) => (
             <div
               key={i}
               ref={(el) => (panelRefs.current[i] = el)}
